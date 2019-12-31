@@ -53,7 +53,7 @@ class EditorComponent extends React.Component {
   }
 
   handleEditorChange = ({html, text}, event) => {
-    this.props.getEditorContent(text);
+
   }
 
   handleImageUpload = (file, callback) => {
@@ -111,23 +111,23 @@ class EditorComponent extends React.Component {
       // })
     })
   }
-  handleGetMdValue = () => {   
-    this.mdEditor && alert(this.mdEditor.getMdValue())      
+  handleGetMdValue = () => {
+    return this.mdEditor &&this.mdEditor.getMdValue()
   }
-  handleGetHtmlValue = () => {    
+  handleGetHtmlValue = () => {
     this.mdEditor && alert(this.mdEditor.getHtmlValue())
   }
 
   componentDidMount() {
-
+    this.props.onRef(this)
   }
   render() {
     return(
       <div>
-        <nav>
+        {/* <nav>
           <button onClick={this.handleGetMdValue} >getMdValue</button>  
           <button onClick={this.handleGetHtmlValue} >getHtmlValue</button>  
-        </nav>
+        </nav> */}
         <section style={{height: '500px'}}>
           <MdEditor 
             ref={node => this.mdEditor = node}

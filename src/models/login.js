@@ -29,21 +29,6 @@ export default {
         loginSuccess: login === 'success' ? true : false,
         message
       }
-    },
-    save(state, action) {
-      console.log('执行了save')
-      return { ...state, ...action.payload };
-    },
-    add(state, action) {
-      console.log('count/add');
-      console.log('state', state);
-      console.log('action', action);
-      const newCurrent = state.current + 1;
-      return {
-        ...state,
-        record: newCurrent > state.current ? newCurrent : state.current,
-        current: newCurrent
-      }
     }
   },
 
