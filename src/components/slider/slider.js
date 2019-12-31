@@ -124,12 +124,10 @@ class SliderComponent extends React.Component {
 
   navigationToCount = () => {
     this.props.history.push('/count');
-    console.log('this', this);
   }
 }
 
 const mapStateToProps = (state) => {
-  console.log('state', state);
   return {
     defaultSelectedKeys: state.slider.defaultSelectedKeys,
   }
