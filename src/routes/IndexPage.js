@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
-import SlicerComponent from '../components/slider/slider';
 import './IndexPage.css'
 import EditorComponent from '../components/editor/editor';
-import { Table, Divider, Tag, Modal, Button, Select, Form, message } from 'antd';
+import { Table, Divider, Modal, Button, Select, Form, message } from 'antd';
 
 const { Option } = Select;
 
@@ -103,11 +102,10 @@ class IndexPage extends React.Component {
   }
 
   render() {
-    const {history, location} = this.props;
-    const { visible, loading } = this.state;
+    const { visible } = this.state;
     const { getFieldDecorator } = this.props.form;
     return(
-      <SlicerComponent history={history} location = {location}>
+      // <SlicerComponent history={history} location = {location}>
         <div className='content'>
           <div className='topButton'>
             <Button type="primary" onClick={this.showModal}>
@@ -165,7 +163,7 @@ class IndexPage extends React.Component {
           {/* 表格数据 */}
           <Table columns={this.initColumns()} dataSource={this.props.articleList} />
         </div>
-      </SlicerComponent>
+      // </SlicerComponent>
     );
   }
 

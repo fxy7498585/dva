@@ -10,11 +10,11 @@ const { Header, Content, Footer, Sider } = Layout;
 
 
 class SliderComponent extends React.Component {
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub3'];
+  rootSubmenuKeys = ['blog', 'subscribe', 'sub3'];
   constructor(props) {
     super(props);
     this.state = {
-      openKeys: ['sub1'],
+      openKeys: ['blog'],
     };
   }
 
@@ -22,9 +22,12 @@ class SliderComponent extends React.Component {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       this.setState({ openKeys });
+      this.props.dispatch({type: 'slider/setOpenKey', payload: openKeys })
     } else {
       this.setState({
         openKeys: latestOpenKey ? [latestOpenKey] : [],
+      }, () => {
+        this.props.dispatch({type: 'slider/setOpenKey', payload: this.state.openKeys })
       });
     }
   };
@@ -61,14 +64,14 @@ class SliderComponent extends React.Component {
             <Sider width={200} style={{ background: '#fff' }} onCollapse={(collapsed, type) => {console.log(collapsed)}}>
               <Menu
                 mode="inline"
-                openKeys={this.state.openKeys}
+                openKeys={this.props.openKeys}
                 onOpenChange={this.onOpenChange}
                 defaultSelectedKeys={this.props.defaultSelectedKeys}
                 style={{ height: '100%' }}
                 onClick={this.onClickMenuItem}
               >
                 <SubMenu
-                  key="sub1"
+                  key="blog"
                   title={
                     <span>
                       <Icon type="user" />
@@ -82,15 +85,15 @@ class SliderComponent extends React.Component {
                   <Menu.Item key="4">option4</Menu.Item>
                 </SubMenu>
                 <SubMenu
-                  key="sub2"
+                  key="subscribe"
                   title={
                     <span>
                       <Icon type="laptop" />
-                      subnav 2
+                      订阅消息
                     </span>
                   }
                 >
-                  <Menu.Item key="5">option5</Menu.Item>
+                  <Menu.Item key="/addTemplate">添加模板</Menu.Item>
                   <Menu.Item key="6">option6</Menu.Item>
                   <Menu.Item key="7">option7</Menu.Item>
                   <Menu.Item key="8">option8</Menu.Item>
@@ -130,6 +133,7 @@ class SliderComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     defaultSelectedKeys: state.slider.defaultSelectedKeys,
+    openKeys: state.slider.openKeys,
   }
 }
 
