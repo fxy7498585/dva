@@ -33,7 +33,7 @@ class IndexPage extends React.Component {
         key: 'content',
         dataIndex: 'content',
         render: content => {
-          return <a>{content}</a>
+          return <a>{content.length > 50 ? content.slice(1,50) + '...' : content}</a>
         },
       },
       {
