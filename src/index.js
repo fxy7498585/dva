@@ -25,6 +25,7 @@ allModule.forEach((item) => {
 })
 
 
+
 // 4. Router
 app.router(RouterConfig);
 

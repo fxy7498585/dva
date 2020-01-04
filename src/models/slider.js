@@ -4,7 +4,8 @@ export default {
   namespace: 'slider',
 
   state: {
-    defaultSelectedKeys: ['/']
+    defaultSelectedKeys: ['/'],
+    openKeys: ['blog'],
   },
 
   subscriptions: {
@@ -24,9 +25,18 @@ export default {
   },
 
   reducers: {
+    setOpenKey(state, action) {
+      console.log(action)
+      const openKeys = action.payload;
+      return {
+        ...state,
+        openKeys
+      }
+    },
     changeSelectKy(state, action) {
       console.log(state, action);
       const path = action.payload;
+
       return {
         ...state,
         defaultSelectedKeys: [path]

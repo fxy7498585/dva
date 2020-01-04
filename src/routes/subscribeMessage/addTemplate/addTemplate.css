@@ -1,0 +1,8 @@
+.templateTable {
+  display: flex;
+  flex-direction: row;
+}
+
+.input {
+  width: 150px;
+}

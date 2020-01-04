@@ -4,7 +4,7 @@ import './lazyLoad.css';
 import LazyLoad from 'react-lazyload';
 
 class LazyLoadComponent extends React.Component {
-
+  
   render() {
     return(
       <div>
