@@ -17,16 +17,17 @@ import 'highlight.js/styles/atom-one-light.css'
 
 import fetch from 'dva/fetch';
 
-const MOCK_DATA = ""
+
 class EditorComponent extends React.Component {
   mdEditor = null
   mdParser = null
   constructor(props) {
     super(props);
     this.state = {
-      
+      MOCK_DATA: '',
     };
 
+   
     this.mdParser = new MarkdownIt({
       html: true,
       linkify: true,
@@ -56,11 +57,13 @@ class EditorComponent extends React.Component {
 
   }
 
+  
+
   handleImageUpload = (file, callback) => {
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('http://localhost:3000/api/web/user/related/person/upload', {
+    fetch('https://localhost:3000/api/web/user/related/person/upload', {
       body: formData,
       method: 'POST',
     })
@@ -98,9 +101,9 @@ class EditorComponent extends React.Component {
 
   onBeforeClear = () => {
     return new Promise((resolve, reject) => {
-      const result = window.confirm('Are you sure you want to clear your markdown :-)')
-      const toClear = result ? true : false
-      resolve(toClear)
+      // const result = window.confirm('Are you sure you want to clear your markdown :-)')
+      // const toClear = result ? true : false
+      resolve(true)
       // custom confirm dialog pseudo code
       // YourCustomDialog.open(() => {
       //   // confirm callback
@@ -111,6 +114,11 @@ class EditorComponent extends React.Component {
       // })
     })
   }
+
+  clearTextHtml = () => {
+    this.mdEditor.handleEmpty();
+  }
+
   handleGetMdValue = () => {
     return this.mdEditor &&this.mdEditor.getMdValue()
   }
@@ -122,16 +130,17 @@ class EditorComponent extends React.Component {
     this.props.onRef(this)
   }
   render() {
+    console.log('editor', this);
     return(
       <div>
-        {/* <nav>
+        <nav>
           <button onClick={this.handleGetMdValue} >getMdValue</button>  
           <button onClick={this.handleGetHtmlValue} >getHtmlValue</button>  
-        </nav> */}
+        </nav>
         <section style={{height: '500px'}}>
           <MdEditor 
             ref={node => this.mdEditor = node}
-            value={MOCK_DATA}
+            value={this.props.editorContent? this.props.editorContent.content : ''}
             style={{height: '400px'}}
             renderHTML={this.renderHTML}
             config={{
@@ -153,6 +162,9 @@ class EditorComponent extends React.Component {
     );
   }
 
+  UNSAFE_componentWillUpdate() {
+    console.log('UNSAFE_componentWillUpdate');
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -164,3 +176,8 @@ const mapStateToProps = (state) => {
 
 
 export default connect(mapStateToProps)(EditorComponent);
+
+
+//  <EditorComponent onRef={this.onRef} content={this.state.editorContent}></EditorComponent>
+//  this.child && this.child.clearTextHtml(); // 清楚数据
+//  组件中的content值  为传过去的值

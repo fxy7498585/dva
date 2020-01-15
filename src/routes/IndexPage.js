@@ -16,6 +16,7 @@ class IndexPage extends React.Component {
       visible: false,
       editorContent: '', // 文章内容
       type: '', // 文章类型
+      buttonType: 'add',
     }
   }
   
@@ -40,24 +41,107 @@ class IndexPage extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <a>修改</a>
+            <a onClick={() => this.updateTable(record)}>修改</a>
             <Divider type="vertical" />
-            <a>删除</a>
+            <a onClick={() => {this.handleDelete(record)}}>删除</a>
           </span>
         ),
       },
     ];
   }
 
-  showModal = () => {
+  handleDelete = (record) => {
+    this.props.dispatch({
+      type: 'article/delete',
+      payload: {
+        id: record.id
+      }
+    })
+    .then(res => {
+      if(res.code === 0) {
+        message.success('删除成功');
+        this.props.dispatch({
+          type: 'article/findAll',
+        });
+        this.setState({
+          // editorContent: content,
+          visible: false,
+        })
+      } else {
+        message.error('删除失败');
+      }
+    });
+  }
+
+  updateTable = (value) => {
+    console.log(value.content);
+    this.setState({
+      buttonType: 'update',
+      type: value.type,
+      editorContent: {
+        ...value,
+        content: JSON.parse(value.content)
+      } 
+    }, () => {
+      console.log(this.state.type);
+    });
+    this.showModal(false);
+  }
+
+  showModal = (flag = true) => {
+    // 每次弹出markdown编辑器的时候清楚上一次的内容
+    if(flag) {
+      this.setState({
+        buttonType: 'add',
+      });
+      this.child && this.child.clearTextHtml();
+    }
+    
     this.setState({
       visible: true,
     });
   };
 
+  handleOkAndUpdate = () => {
+    this.state.buttonType === 'add' ? this.handleOk() : this.handlerUpdate();
+  }
+
+  handlerUpdate = () => {
+    const content = this.child.handleGetMdValue();
+    console.log(this.state.type, content);
+    if (!this.state.type || !content) {
+      message.warning('请填写完整内容');
+    } else {
+      console.log(content);
+      this.props.dispatch({
+        type: 'article/update',
+        payload: {
+          editorContent: JSON.stringify(content),
+          type: this.state.type,
+          id: this.state.editorContent ? this.state.editorContent.id : ''
+        }
+      })
+      .then(res => {
+        if(res.code === 0) {
+          message.success('更新成功');
+          this.props.dispatch({
+            type: 'article/findAll',
+          });
+          this.setState({
+            // editorContent: content,
+            visible: false,
+          })
+        } else {
+          message.error('更新失败');
+        }
+      });
+    }
+  }
+
   handleOk = () => {
     console.log(this.state.type, this.state.editorContent);
     const content = this.child.handleGetMdValue();
+    console.log(this.state.type, content);
     if (!this.state.type || !content) {
       message.warning('请填写完整内容');
     } else {
@@ -66,7 +150,7 @@ class IndexPage extends React.Component {
         type: 'article/add',
         payload: {
           editorContent: JSON.stringify(content),
-          type: this.state.type
+          type: this.state.type,
         }
       })
       .then(res => {
@@ -95,10 +179,17 @@ class IndexPage extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    console.log('getDerivedStateFromProps');
     this.props.dispatch({
       type: 'article/findAll',
     });
+  }
+
+  initButton = () => {
+    return this.state.buttonType === 'add' ?
+    <Button key="confirm" onClick={this.handleOk}>确定</Button>: 
+    <Button key="update" onClick={this.handleUpdate}>
+      更新
+    </Button>
   }
 
   render() {
@@ -121,27 +212,16 @@ class IndexPage extends React.Component {
                 <Button key="back" onClick={this.handleCancel}>
                   取消
                 </Button>,
-                <Button key="submit" type="primary" onClick={this.handleOk}>
-                  确认
-                </Button>,
+                <Button key="confirm" onClick={this.handleOkAndUpdate}>确定</Button>
               ]}
             >
               <Form>
                 <Form.Item label="文章类型">
-                  {getFieldDecorator('type', {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Please input your password!',
-                      },
-                      {
-                        validator: this.validateToNextPassword,
-                      },
-                    ],
-                  })(<Select
+                  <Select
+                    value={this.state.type ? this.state.type : '请选择分类'}
                     showSearch
                     style={{ width: 200 }}
-                    placeholder="Select a person"
+                    placeholder="请选择分类"
                     optionFilterProp="children"
                     onChange={this.onChange}
                     onFocus={this.onFocus}
@@ -154,14 +234,14 @@ class IndexPage extends React.Component {
                     <Option value="jack">Jack</Option>
                     <Option value="lucy">Lucy</Option>
                     <Option value="tom">Tom</Option>
-                  </Select>)}
+                  </Select>
                 </Form.Item>
-                <EditorComponent onRef={this.onRef}></EditorComponent>
+                <EditorComponent onRef={this.onRef} editorContent={this.state.editorContent}></EditorComponent>
               </Form>
             </Modal>
           </div>
           {/* 表格数据 */}
-          <Table columns={this.initColumns()} dataSource={this.props.articleList} />
+          <Table columns={this.initColumns()} rowKey={record => record.id} dataSource={this.props.articleList} />
         </div>
       // </SlicerComponent>
     );

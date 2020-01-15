@@ -75,7 +75,7 @@ class SliderComponent extends React.Component {
                   title={
                     <span>
                       <Icon type="user" />
-                      subnav 1
+                      博客信息
                     </span>
                   }
                 >

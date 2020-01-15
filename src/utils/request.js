@@ -63,6 +63,6 @@ export default function request(url, options) {
   })
   .catch(err =>  {
     console.log('err', err);
-    throw new Error(err)
+    throw err;
   })
 }

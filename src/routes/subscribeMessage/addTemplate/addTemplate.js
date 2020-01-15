@@ -15,8 +15,8 @@ class addTemplatePage extends React.Component {
   UNSAFE_componentWillMount() {
     this.props.dispatch({type: 'subscribeMessage/getAccessToken'})
     .then((result) => {
-       this.props.dispatch({type: 'subscribeMessage/getCategory'});
-       this.props.dispatch({type: 'subscribeMessage/getTemplateList'})
+      //  this.props.dispatch({type: 'subscribeMessage/getCategory'});
+      //  this.props.dispatch({type: 'subscribeMessage/getTemplateList'})
     }).catch((err) => {
       
     });
@@ -40,7 +40,7 @@ class addTemplatePage extends React.Component {
             <Input placeholder="请输入tid" maxLength={100} onChange={this.inputOnchange} className='input'/>
             <Button type="primary" onClick={this.getPubTemplateKeyWordsById}>获取模板标题下的关键词列表</Button>
           </div>
-          <Table columns={this.initKeyWords()} rowKey={record => record.kid} dataSource={this.props.templateKeyWords} />
+          <Table columns={this.initKeyWords()} rowKey={record => record.id} dataSource={this.props.templateKeyWords} />
         </div>
       // </SlicerComponent>
     );

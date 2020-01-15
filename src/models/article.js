@@ -1,4 +1,4 @@
-import { add, findAll } from '../services/article.service';
+import { add, findAll, update, deleted } from '../services/article.service';
 export default {
 
   namespace: 'article',
@@ -16,6 +16,17 @@ export default {
   },
 
   effects: {
+
+    *update({payload}, {call, put}) {
+      const data = yield call(update, payload);
+      return data;
+    },
+
+    *delete({payload}, {call, put}) {
+      const data = yield call(deleted, payload);
+      return data;
+    },
+
     *add({payload}, {call, put}) {
       const data = yield call(add, payload);
       return data;

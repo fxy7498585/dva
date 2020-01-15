@@ -19,7 +19,7 @@ function RouterConfig({ history, app }) {
     },
     {
       path: '/photo',
-      neme: 'Phone',
+      neme: 'Photo',
       layout: SlicerComponent,
       component: () => import('./routes/photo/photo')
     },
